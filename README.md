@@ -1,6 +1,14 @@
 # form_screen
 
-A new Flutter project.
+Mobile Dev Class activity
+
+# Breakout Room 2 Members
+
+- Michael Nwuju
+- Adossi Fred William
+- Gabriel Tuyisingize Sezibera
+- Adeline Iradukunda
+- Sash Munyankindi
 
 ## Getting Started
 

@@ -9,9 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Registration_form',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: RegistrationForm(),
     );
   }
@@ -32,23 +30,46 @@ class _RegistrationFormState extends State<RegistrationForm> {
   bool _mobileApplication = false;
   double _tution = 900.90;
   String _userNameError = '';
+  String _userNameRegexError = '';
   String _passwordError = '';
+  String _passwordRegexError = '';
   bool _Submitted = false;
   bool _isPasswordVisible = false;
 
   void _validateAndSubmit() {
     setState(() {
       _userNameError = '';
+      _userNameRegexError = '';
       _passwordError = '';
+      _passwordRegexError = '';
       _Submitted = false;
 
       if (_usernameController.text.length != 10) {
         _userNameError = 'Username must be exactly 10 characters long';
       }
+
+      if (!RegExp(
+        r'^[A-Za-z][A-Za-z0-9]{9}$',
+      ).hasMatch(_usernameController.text)) {
+        _userNameRegexError =
+            'Username must start with a letter and be exactly 10 characters long';
+      }
+
       if (_passwordController.text.length < 6) {
         _passwordError = 'Password must be at least 6 characters long';
       }
-      if (_userNameError.isEmpty && _passwordError.isEmpty) {
+      // checks if the password contains at least one lowercase letter, one uppercase letter, one digit
+      if (!RegExp(
+        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$',
+      ).hasMatch(_passwordController.text)) {
+        _passwordRegexError =
+            'Password must contain at least one lowercase letter, one uppercase letter, one digit';
+      }
+
+      if (_userNameError.isEmpty &&
+          _userNameRegexError.isEmpty &&
+          _passwordError.isEmpty &&
+          _passwordRegexError.isEmpty) {
         _Submitted = true;
       }
     });
@@ -71,16 +92,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
       _tution = 900.90;
       _Submitted = false;
       _userNameError = '';
+      _userNameRegexError = '';
       _passwordError = '';
+      _passwordRegexError = '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Registration Form'),
-      ),
+      appBar: AppBar(title: Text('Registration Form')),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -90,7 +111,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
               controller: _usernameController,
               decoration: InputDecoration(
                 labelText: 'Username',
-                errorText: _userNameError.isNotEmpty ? _userNameError : null,
+                errorText: _userNameError.isNotEmpty
+                    ? _userNameError
+                    : _userNameRegexError.isNotEmpty
+                    ? _userNameRegexError
+                    : null,
               ),
             ),
             SizedBox(height: 16.0),
@@ -99,10 +124,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
                 labelText: 'Password',
-                errorText: _passwordError.isNotEmpty ? _passwordError : null,
+                errorText: _passwordError.isNotEmpty
+                    ? _passwordError
+                    : _passwordRegexError.isNotEmpty
+                    ? _passwordRegexError
+                    : null,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                   ),
                   onPressed: () {
                     setState(() {
